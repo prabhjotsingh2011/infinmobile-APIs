@@ -1,7 +1,7 @@
 
 const UserModel=require('../../models/User.js');
 class userService{
-    async   findUser(filter){
+    async findUser(filter){
         const user=await UserModel.findOne(filter);
         return user;
     }
@@ -10,7 +10,10 @@ class userService{
         
         return user;
     }
-    
+    async updateUser(filter,update){
+        const user=await UserModel.findOneAndUpdate(filter,update);
+        return user;
+    }
 }
 
 module.exports=new userService();

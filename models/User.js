@@ -11,20 +11,29 @@ const userSchema = mongoose.Schema({
     },
     DOB: {
         type: String,
-        required: true
+        required: false
     },
     username: {
         type: String,
-        required: true
+        required: false
     },
     email: {
         type: String,
-        required: true
+        required: false
     },
     password: {
         type: String,
-        required: true,
+        required: false,
     },
+    photo: {
+        type: String,
+        required: false
+    },
+    AuthId:{
+        type: String,
+        required: false
+    }
+
 }, {
     timestamps: true,
     // toJSON: { getters: true }

@@ -1,11 +1,11 @@
 class userDto {
-    _id;
-    firstName;
-    lastName;
-    DOB;
-    username;
-    email;
-    createdAt;
+    // _id
+    // firstName
+    // lastName
+    // DOB
+    // username
+    // email
+    // createdAt
 
     constructor(room) {
         this._id = room._id;
@@ -15,7 +15,6 @@ class userDto {
         this.firstName = room.firstName;
         this.lastName = room.lastName;
         this.DOB = room.DOB;
-
     }
 }
 

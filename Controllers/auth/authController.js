@@ -1,18 +1,15 @@
 const userDto = require('../../dtos/user-dto');
 const Hashing = require('../../Services/auth/Hashing');
 const userService = require('../../Services/user/user-service');
-const otpService = require('../../services/auth/otp-service');
+const otpService = require('../../Services/auth/otp-service');
 
-global.userCurrent=null;
+global.userCurrent = null;
 
 class authController {
 
 
     async signUp(req, res) {
-        // res.send(req);
         const { username, email, password, confirmPassword, firstName, lastName, Mobile, DOB } = req.body;
-        // const username=req.body.username;
-
         if (!username || !email || !password || !confirmPassword) {
             res.status(401).json({ message: 'Please fill all the fields' });
         }
@@ -20,7 +17,6 @@ class authController {
             res.status(401).json({ message: 'Password and Confirm Password do not match' });
         }
         else {
-            // let hashedPassword;
             let otp, hash, expires;
             try {
                 try {
@@ -28,25 +24,28 @@ class authController {
 
                     if (userIsExists) {
                         const userDt = new userDto(userIsExists)
+                        
                         return res.status(200).json({ message: 'Username already exists', userDt });
                     }
                 } catch (error) {
                     return res.status(500).json({ message: 'Something went wrong while querying database' });
                 }
 
+
                 const OtpAck = await otpService.sendOtp(email);
                 otp = OtpAck.otp; hash = OtpAck.hash; expires = OtpAck.expires;
+ 
 
                 if (!otp || !hash || !expires) {
                     return res.status(500).json({ message: 'Something went wrong while sending otp' });
                 } else {
 
                     // hashing password and creating user
-                    try {
+                    try {                 
                         const hashedPassword = await Hashing.hash(password);
-                        userCurrent = { firstName, lastName, Mobile, password: hashedPassword, username: username, email: email, DOB } ;   
-                       
-                        // global.user = await userService.createUser({ password: hashedPassword, username: username, email: email });
+                        // userCurrent = { firstName, lastName, Mobile, password: hashedPassword, username: username, email: email, DOB };
+                        userCurrent = { firstName, lastName, Mobile, password: hashedPassword, username: username, email: email, DOB };
+ 
                     } catch (error) {
                         return res.status(500).json({ message: 'Something went wrong while creating user please try again' });
                     }
@@ -55,44 +54,15 @@ class authController {
                 return res.status(401).json({ message: "Something went wrong  while sending otp " });
             }
 
-
-
-
-            return res.status(200).json({ message: 'Enter the otp for successfully signup', hashedOTP: hash, expiresIN: expires });
-
-
-
-
-
-
-
-            // //quering for exsitsing user
-            // try {
-            //     user = await userService.findUser({ username });
-            //     if (user) {
-            //         const userDt = new userDto(user)
-            //         return res.status(200).json({ message: 'Username already exists', userDt });
-            //     }
-            // } catch (error) {
-            //     return res.status(500).json({ message: 'Something went wrong while querying database' });
-            // }
-
-            // //hashing password and creating user
-            // try {
-            //     hashedPassword = await Hashing.hash(password);
-            //     user = await userService.createUser({ password: hashedPassword, username: username, email: email });
-            // } catch (error) {
-            //     return res.status(500).json({ message: 'Something went wrong while creating user please try again' });
-            // }
-            // return res.status(200).json({ message: 'User created successfully', user: new userDto(user) });
+            return res.status(200).json({ message: 'Enter the otp for successfully signup', hashedOTP: hash, expiresIN: expires, otp:otp });
         }
 
 
     }
 
 
-    async login(req, res) {;
-       
+    async login(req, res) {
+        
         const { email, password } = req.body;
         let user;
         let hashedPassword;
@@ -132,7 +102,10 @@ class authController {
         }
         try {
             const OtpAck = await otpService.sendOtp(email);
-            otp = await  OtpAck.otp; hash = OtpAck.hash; expires = OtpAck.expires;
+            otp = await OtpAck.otp; hash = OtpAck.hash; expires = OtpAck.expires;
+            // console.log('====================================');
+            // console.log(otp, hash,);
+            // console.log('====================================');
 
             if (!otp || !hash || !expires) {
                 return res.status(500).json({ message: 'Something went wrong while sending otp' });
@@ -140,14 +113,14 @@ class authController {
         } catch (error) {
             return res.status(401).json({ message: "Something went wrong  while sending otp " });
         }
-        return res.status(200).json({ message: 'Enter the otp to change the password sent to you', hashedOTP: hash, expiresIN: expires });
+        return res.status(200).json({ message: 'Enter the otp to change the password sent to you', hashedOTP: hash, expiresIN: expires, otp });
     }
 
 
     async resetPassword(req, res) {
         const { email, password, confirmPassword } = req.body;
         let user;
-        if (!email || !password || !confirmPassword ) {
+        if (!email || !password || !confirmPassword) {
             return res.status(401).json({ message: 'Please fill all the fields' });
         }
         try {
@@ -163,19 +136,21 @@ class authController {
         }
         try {
             const hashedPassword = await Hashing.hash(password);
-            user = await userService.updateUser({ id: user.id, password: hashedPassword });
+            user = await userService.updateUser({ _id: user.id }, { password: hashedPassword });
         } catch (error) {
             return res.status(500).json({ message: 'Something went wrong while updating user please try again' });
         }
         return res.status(200).json({ message: 'Password updated successfully', user: new userDto(user) });
     }
 
-    
-    
+
+
 
     async verifyOTP(req, res,) {
         // console.log(userCurrent);
         const { otp, hash } = req.body;
+        let email;
+        if (req.body.email) email = req.body.email;
         if (!otp || !hash) {
             return res.status(401).json({ message: 'Please fill all the fields' });
         }
@@ -190,21 +165,11 @@ class authController {
 
         try {
 
-            // if(userCurrent.email){
-                const userExist = await userService.findUser({ email: userCurrent.email });
-                // console.log('====================================');
-                // console.log(userExist);
-                // console.log('====================================');
-                if(userExist) {
-                    return res.status(200).json({ message: 'Otp verified' });
-                }
-            // }
-
-            // const currUser = await userService.createUser({user, password: hashedPassword, username: username, email: email });
+            const userExist = await userService.findUser({ email: email });
+            if (userExist) {
+                return res.status(200).json({ message: 'Otp verified', user: new userDto(userExist) });
+            }
             const thisUser = await userService.createUser(userCurrent);
-            
-
-
             return res.status(200).json({ message: 'OTP verified successfully', user: new userDto(thisUser) });
         } catch (error) {
             return res.status(500).json({ message: 'Something went wrong while validating password' });
@@ -213,6 +178,7 @@ class authController {
 
         // return res.status(200).json({ message: 'OTP verified successfully' });
     }
+
 
 }
 
