@@ -14,7 +14,16 @@ class userDto {
         this.createdAt = room.createdAt;
         this.firstName = room.firstName;
         this.lastName = room.lastName;
+        this.photo = room.photo;
         this.DOB = room.DOB;
+        this.AuthId = room.AuthId;
+        // this.pushNotification = room.pushNotification;
+        // this.chatNotification = room.chatNotification;
+        // this.MentionInComments = room.MentionInComments;
+        // this.FollowingSellerWentLive = room.FollowingSellerWentLive;
+        // this.OrderStatus = room.OrderStatus;
+        this.notification= room.notification;
+        
     }
 }
 
