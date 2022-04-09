@@ -45,6 +45,7 @@ class authController {
                         const hashedPassword = await Hashing.hash(password);
                         // userCurrent = { firstName, lastName, Mobile, password: hashedPassword, username: username, email: email, DOB };
                         userCurrent = { firstName, lastName, Mobile, password: hashedPassword, username: username, email: email, DOB };
+                        console.log(userCurrent);
  
                     } catch (error) {
                         return res.status(500).json({ message: 'Something went wrong while creating user please try again' });
@@ -167,7 +168,7 @@ class authController {
 
             const userExist = await userService.findUser({ email: email });
             if (userExist) {
-                return res.status(200).json({ message: 'Otp verified', user: new userDto(userExist) });
+                return res.status(200).json({ message: 'Otp verified', user: userExist });
             }
             const thisUser = await userService.createUser(userCurrent);
             return res.status(200).json({ message: 'OTP verified successfully', user: new userDto(thisUser) });

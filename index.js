@@ -4,7 +4,8 @@ const router = require('./router')
 var bodyParser = require('body-parser')
 const google_Passport_setup = require('./config/google-passport-setup')
 const facebook_passport_setup = require('./config/facebook-passport-setup')
-const cookieSession= require('cookie-session')
+const cookieSession = require('cookie-session')
+const cors = require('cors')
 require("dotenv").config();
 const app = express();
 
@@ -14,9 +15,9 @@ var passport = require('passport');
 
 app.use(cookieSession({
     name: 'session for google auth',
-    maxAge: 24*60*60*1000,
+    maxAge: 24 * 60 * 60 * 1000,
     keys: ['key1', 'key2']
-    }));
+}));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -33,16 +34,21 @@ app.get('/failed', (req, res) => {
 
 function isLoggedIn(req, res, next) {
     req.user ? next() : res.sendStatus(401);
-  }
-  
-app.get('/passed',isLoggedIn, (req, res) => {
+}
+
+app.get('/passed', isLoggedIn, (req, res) => {
     res.send(" passed-  logged in successfully");
 });
 
 
-// app.set('view engine', 'ejs');
 
-app.use('/public',express.static('public'));
+// app.set('view engine', 'ejs');
+const corsOption = {
+    credentials: true,
+    origin: ['http://localhost:3000']
+}
+app.use(cors(corsOption))
+app.use('/public', express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(express.json())

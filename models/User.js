@@ -33,29 +33,16 @@ const userSchema = mongoose.Schema({
         type: String,
         required: false
     },
-    notification:{
-        type:Object,
+    notification: {
+        type: Object,
     },
-    // pushNotification:{
-    //     type: Boolean,
-    //     default:false
-    // },
-    // chatNotification:{
-    //     type: Boolean,
-    //     default:false
-    // },
-    // MentionInComments:{
-    //     type: Boolean,
-    //     default:false
-    // },
-    // FollowingSellerWentLive:{
-    //     type: Boolean,
-    //     default:false
-    // },
-    // OrderStatus:{
-    //     type: Boolean,
-    //     default:false
-    // }
+    followers: {
+        type: Array,
+    },
+    followings: {
+        type: Array,
+    }
+
 
 }, {
     timestamps: true,
