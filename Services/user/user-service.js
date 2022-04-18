@@ -7,7 +7,6 @@ class userService{
     }
     async createUser(data){
         const user=await UserModel.create(data);
-        
         return user;
     }
     async updateUser(filter,update){

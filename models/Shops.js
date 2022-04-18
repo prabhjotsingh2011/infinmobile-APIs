@@ -1,28 +1,28 @@
-const mongoose=require('mongoose');
-
-const shopSchema=mongoose.Schema({
-    shopName:{
-        type:String,
-        required:true
+const mongoose = require('mongoose');
+const User=require('./User.js')
+const shopSchema = mongoose.Schema({
+    shopName: {
+        type: String,
+        required: true
     },
-    shopDescription:{
-        type:String,
-        required:true
+    shopDescription: {
+        type: String,
+        required: true
     },
-    website:{
-        type:String,
-        required:false
+    website: {
+        type: String,
+        required: false
     },
-    companyUEN:{
-        type:String,
+    companyUEN: {
+        type: String,
     },
-    logo:{
-        type:String,
-        required:true
-    } ,
-    notification:{
-        type:Object,
-        default:{
+    logo: {
+        type: String,
+        required: true
+    },
+    notification: {
+        type: Object,
+        default: {
             pushNotification: false,
             chatNotification: false,
             followerNotification: false,
@@ -32,6 +32,10 @@ const shopSchema=mongoose.Schema({
         }
 
     },
+    userid: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: User
+    }
 }, {
     timestamps: true,
     // toJSON: { getters: true }

@@ -8,22 +8,22 @@ class userDto {
     // createdAt
 
     constructor(room) {
-        this._id = room._id;
+        this.id = room._id;
         this.username = room.username;
         this.email = room.email;
         this.createdAt = room.createdAt;
-        this.firstName = room.firstName;
-        this.lastName = room.lastName;
+        this.firstname = room.firstname;
+        this.lastname = room.lastname;
         this.photo = room.photo;
-        this.DOB = room.DOB;
-        this.AuthId = room.AuthId;
+        this.date_of_birth = room.date_of_birth;
+        this.authid = room.authid;
         // this.pushNotification = room.pushNotification;
         // this.chatNotification = room.chatNotification;
         // this.MentionInComments = room.MentionInComments;
         // this.FollowingSellerWentLive = room.FollowingSellerWentLive;
         // this.OrderStatus = room.OrderStatus;
-        this.notification= room.notification;
-        
+        this.notification = room.notification;
+
     }
 }
 

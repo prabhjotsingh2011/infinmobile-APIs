@@ -6,6 +6,7 @@ const google_Passport_setup = require('./config/google-passport-setup')
 const facebook_passport_setup = require('./config/facebook-passport-setup')
 const cookieSession = require('cookie-session')
 const cors = require('cors')
+const cookieParser = require('cookie-parser')
 require("dotenv").config();
 const app = express();
 
@@ -47,7 +48,10 @@ const corsOption = {
     credentials: true,
     origin: ['http://localhost:3000']
 }
+
+
 app.use(cors(corsOption))
+app.use(cookieParser())
 app.use('/public', express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())

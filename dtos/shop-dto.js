@@ -1,6 +1,8 @@
 class shopDto{
     constructor(room){
         this.shopId = room._id;
+        this.userid = room.userid;
+        //userId:type :object
         this.shopName = room.shopName;
         this.website = room.website;
         this.shopDescription = room.shopDescription;
